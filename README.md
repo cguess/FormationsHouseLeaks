@@ -3,6 +3,9 @@ As far as the time of this writing, the 29 Leaks dump of Formations House contai
 files each containing a MySQL dump file of a database of emails. This repository contains a few scripts to
 make the analysis of these possible.
 
+In total this processed ~50 million emails, which will be available soon in a fully searchable database. 
+The process, whn run end to end took about two weeks in total on a fairly bulky multi-core AWS instance.
+
 ## Issues To Contend With
 There are a number issues that don't just let us import the files directly:
 1. The files are only `ALTER TABLE`, so the database and tables have to be set up manually
