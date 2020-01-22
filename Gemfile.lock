@@ -1,0 +1,58 @@
+GIT
+  remote: https://github.com/codefriar/RubySpamAssassin
+  revision: d3ba8bcb9c140914ee7c225335db26ce9a72c9f1
+  specs:
+    RubySpamAssassin (1.0.3)
+
+GIT
+  remote: https://github.com/tmm1/rbtrace
+  revision: 9e9776dec42cd961c5450dff25b7c094bcf394dc
+  branch: master
+  specs:
+    rbtrace (0.4.11)
+      ffi (>= 1.0.6)
+      msgpack (>= 0.4.3)
+      optimist (>= 3.0.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    byebug (11.0.1)
+    clamp (1.3.1)
+    concurrent-ruby (1.1.5)
+    concurrent-ruby-edge (0.5.0)
+      concurrent-ruby (~> 1.1.5)
+    concurrent-ruby-ext (1.1.5)
+      concurrent-ruby (= 1.1.5)
+    connection_pool (2.2.2)
+    ffi (1.11.1)
+    ffi (1.11.1-java)
+    mail (2.7.1)
+      mini_mime (>= 0.1.1)
+    mini_mime (1.0.2)
+    msgpack (1.3.1)
+    msgpack (1.3.1-java)
+    mysql2 (0.5.2)
+    optimist (3.0.0)
+    ruby-progressbar (1.10.1)
+    stackprof (0.2.12)
+
+PLATFORMS
+  java
+  ruby
+
+DEPENDENCIES
+  RubySpamAssassin!
+  byebug
+  clamp
+  concurrent-ruby-edge
+  concurrent-ruby-ext
+  connection_pool
+  mail
+  mysql2
+  rbtrace!
+  ruby-progressbar
+  stackprof
+
+BUNDLED WITH
+   2.0.2
