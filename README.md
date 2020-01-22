@@ -4,7 +4,7 @@ files each containing a MySQL dump file of a database of emails. This repository
 make the analysis of these possible.
 
 In total this processed ~50 million emails, which will be available soon in a fully searchable database. 
-The process, whn run end to end took about two weeks in total on a fairly bulky multi-core AWS instance.
+The process, when run end to end took about two weeks in total on a fairly bulky multi-core AWS instance.
 
 ## Issues To Contend With
 There are a number issues that don't just let us import the files directly:
