@@ -16,7 +16,9 @@ There are a number issues that don't just let us import the files directly:
 There are additional issues with the data itself:
 1. All the email headers are stored in a single column that is just a text string. @pudo has pointed out this is a PGP serialized string... because, sure.
 1. It looks like there was a length limit in whatever system this came out of, because some of the headers seem to be cut off
-1. Email messages can be made with a bunch of different encodings.
+1. Email messages can be made with a bunch of different encodings, but they were exported as, it seems, UTF-8 or extended ASCII. This means that anything that was in a non-Latin language is totally scrambled beyond repair.
+1. The PHP seralize spec requires a "length of object", however, if it was scrambled this is invalid, and there's no way to guess how long it should be.
+1. Instead I had to create, essentially, a fully Ruby, fault-tolerant, PHP serialize parser that handles malformed data properly, this may break and is pretty fragile, but works better than anyone should be able to hope for.
 
 ## Format
 
@@ -47,8 +49,12 @@ The main ones that are used are as follows:
 - `mysql_management.rb`
   - A program to take a folder of split SQL files and to import them to a MySQL database. (**Note:** The database and tables have to be set up manually ahead of time.
 - `email_cleaner.rb`
-  - A program to parse the headers of records in a MySQL database after they were imported.
-  - For now, extracts the "to" and "from" and puts them into the table. Also then saves a more easily parsed JSON version of the headers.
+  - A program to parse the headers of records in a MySQL database after they were imported and export the emails as a `.eml` file.
+  - This does a few things
+  	1. Extracts the "to" and "from" and puts them into the table.
+	1. Saves a more easily parsed JSON version of the headers to the database as well
+	1. Filters for SPAM using the spam score assigned in the database
+	1. Exports as a properly formatted `.eml` file.
   - **NOTE:** Make sure to manually add the `to` and `from` columns to the database after importing, but before running this.
 
 ## Running
@@ -86,32 +92,14 @@ The main ones that are used are as follows:
 	 - `-v` Prints out stuff
 	 - `--debug` Sets debug mode, turning off concurrency and making verbose true. Good if you need to debug the parser since debuggers and concurrency don't play well together.
 
-## Todo
-
-- Sometimes the files are still too big, look into fixing `max_allowed_packet` error.
-- The splitter currently just shoves everything into UTF when saving the file. However, I think this may be screwing up some of the much older encoding still in this database. We should do a look forward to the text-encoding column before saving and act appropriately.
-  - So far I've found the following:
-```
-    us-ascii
-
-	utf-8
-	ISO-8859-1
-	ISO-8859-15
-	windows-1252
-	windows-1251
-	GB2312
-	KOI8-R
-	iso-8859-2
-	windows-1252http-equivContent-Type
-	windows-1256
-	windows-1255
-	ANSI_X3.4-1968
-```
-- Add more fields to pull out and make their own columns in `email_cleaner`
-- We need to export from the MySQL database.
-  - We could just export into large CSV files, chunked out. Should be trivial to code
-  - WE could export each one as a .eml file to make it easier to import to Aleph.
-  - Really, we have a SQL databaase now, we can do whatever.
+### Exporting the New Database to .eml Files
+1. Also make sure everything is imported
+1. `ruby email_cleaner.rb -u <mysql-database-user> -p <mysql-database-password> -h <myslq-host-name> -e <eml-output-directory>`
+    - There's some more here as well, `-h` should explain them but:
+         - `-i` The id to start from when getting entries from the db, for partial output
+	 - `-v` verbose mode, etc.
+	 - `--debug` puts everything into single thread mode and lets you debug
+1. Wait... a *very* long time, like, days, weeks. The end will be a `.eml` directly. From here you can zip them (another tedious process) or whatever.
 
 ## Contact
 This was created by Christopher Guess [@cguess](https://www.twitter.com/cguess).
